@@ -8,8 +8,8 @@ namespace Excubo.Blazor.TreeViews.__Internal
     public partial class ListItem<T>
     {
         [Parameter] public T Item { get; set; }
-        private bool? selected;
-        private bool? Selected
+        protected bool? selected;
+        protected bool? Selected
         {
             get => selected;
             set
@@ -24,7 +24,7 @@ namespace Excubo.Blazor.TreeViews.__Internal
                 StateHasChanged();
             }
         }
-        private void SelectedChanged(bool? value)
+        protected void SelectedChanged(bool? value)
         {
             if (value == Selected)
             {
@@ -35,8 +35,8 @@ namespace Excubo.Blazor.TreeViews.__Internal
             OnSelectedChanged?.Invoke(this, Selected);
         }
         protected event EventHandler<bool?> OnSelectedChanged;
-        [CascadingParameter] private TreeView<T> TreeView { get; set; }
-        [CascadingParameter] private ListItem<T> Parent { get; set; }
+        [CascadingParameter] protected TreeView<T> TreeView { get; set; }
+        [CascadingParameter] protected ListItem<T> Parent { get; set; }
         protected HashSet<ListItem<T>> Children = new HashSet<ListItem<T>>();
         protected override void OnInitialized()
         {
@@ -100,8 +100,8 @@ namespace Excubo.Blazor.TreeViews.__Internal
             StateHasChanged();
             Parent?.ReevaluateSelected();
         }
-        private RenderFragment<ItemContent<T>> ItemTemplate => TreeView.ItemTemplate;
-        private CheckboxFragment CheckboxTemplate => TreeView.CheckboxTemplate;
-        private bool AllowSelection => TreeView.AllowSelection;
+        protected RenderFragment<ItemContent<T>> ItemTemplate => TreeView.ItemTemplate;
+        protected CheckboxFragment CheckboxTemplate => TreeView.CheckboxTemplate;
+        protected bool AllowSelection => TreeView.AllowSelection;
     }
 }
