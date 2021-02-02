@@ -35,11 +35,15 @@ namespace Excubo.Blazor.TreeViews.__Internal
             OnSelectedChanged?.Invoke(this, Selected);
         }
         protected event EventHandler<bool?> OnSelectedChanged;
-        [CascadingParameter] protected TreeView<T> TreeView { get; set; }
+        [CascadingParameter] protected TreeViewBase<T> TreeView { get; set; }
         [CascadingParameter] protected ListItem<T> Parent { get; set; }
         protected HashSet<ListItem<T>> Children = new HashSet<ListItem<T>>();
+        [Parameter] public EventCallback<bool> CollapseHasChanged { get; set; }
+        [Parameter] public bool LoadingChild { get; set; }
+
         protected override void OnInitialized()
         {
+            CollapsedChanged = async () => { await CollapseHasChanged.InvokeAsync(Collapsed); };
             if (TreeView.InitiallyCollapsed)
             {
                 Collapsed = true;
@@ -103,5 +107,6 @@ namespace Excubo.Blazor.TreeViews.__Internal
         protected RenderFragment<ItemContent<T>> ItemTemplate => TreeView.ItemTemplate;
         protected CheckboxFragment CheckboxTemplate => TreeView.CheckboxTemplate;
         protected bool AllowSelection => TreeView.AllowSelection;
+        protected RenderFragment LoadChildrenTemplate => (TreeView as TreeViewAsync<T>)?.LoadingTemplate;
     }
 }
